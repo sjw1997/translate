@@ -72,8 +72,8 @@
         let map = new Map();
         for (const word of words) {
             $.ajax({
-                type: "GET",
-                url: "https://iamsjw.com/api/translate/",
+                type: "POST",
+                url: "https://app5415.acapp.acwing.com.cn/api/translate/",
                 dataType: "json",
                 data: {
                     lines: word
