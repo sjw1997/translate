@@ -34,78 +34,17 @@
         <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar" style="width: 0;"></div>
         </div>
+
+        <div style="text-align: center; color: black;">
+            <a href="http://beian.miit.gov.cn/" style="text-decoration: none; color: black; font-size: 13px;">京ICP备2023022330号-2</a>
+        </div>
     </div>
 
 </body>
 
-<script>
-    const progressDiv = $('.progress');
-    progressDiv.hide();
+<script type="module">
+    import { init } from "/static/js/index.js"
 
-    const downloadBtn = $('#downloadBtn');
-    downloadBtn.hide();
-
-    let res = "";
-    $('#myButton').on('click', function(e) {
-        downloadBtn.hide();
-
-        const lines = $('#myText').val();
-
-        const words = [];
-        for (let i of lines.split("\n")) {
-            if (i.length > 0) {
-                words.push(i);
-            }
-        }
-
-        progressDiv.show();
-
-        let progressBar = $('.progress-bar');
-        progressBar.width("0");
-
-        let translationTextArea = $('#myTranslation');
-        translationTextArea.val("");
-
-        const total = words.length;
-        let cnt = 0;
-        res = "";
-        let map = new Map();
-        for (const word of words) {
-            $.ajax({
-                type: "POST",
-                url: "https://app5415.acapp.acwing.com.cn/api/translate/",
-                dataType: "json",
-                data: {
-                    lines: word
-                },
-                success: function (response) {
-                    map.set(word, response["result"]);
-                    cnt ++ ;
-                    progressBar.width((cnt / total * 100) + "%");
-
-                    if (cnt === total) {
-                        for (const w of words) {
-                            res = res + map.get(w);
-                        }
-                        translationTextArea.val(res);
-                        downloadBtn.show();
-                    }
-                }
-            });
-        }
-    });
-
-    downloadBtn.on('click', () => {
-        const blob = new Blob([res], {
-          type: 'charset=uft-8',
-        });
-        const a = document.createElement('a');
-        const url = window.URL.createObjectURL(blob);
-
-        a.href = url;
-        a.download = `translation.txt`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    });
+    init();
 </script>
 </html>
