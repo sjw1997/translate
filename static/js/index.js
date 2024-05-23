@@ -21,6 +21,12 @@ function init() {
             }
         }
 
+        const MAX_SIZE = 200;
+        if (words.length > MAX_SIZE) {
+            alert(`最多只能输入${MAX_SIZE}个单词`);
+            return;
+        }
+
         progressDiv.show();
 
         let progressBar = $('.progress-bar');
