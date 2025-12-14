@@ -7,8 +7,12 @@ function init() {
     downloadBtn1.hide();
     downloadBtn2.hide();
 
+    // 添加模态框相关变量
+    let currentDownloadType = ''; // 记录当前下载类型
+    let downloadContent = '';     // 记录待下载内容
+
     let res1 = "", res2 = "";
-    $('#myButton').on('click', function(e) {
+    $('#myButton').on('click', function (e) {
         downloadBtn1.hide();
         downloadBtn2.hide();
 
@@ -61,7 +65,7 @@ function init() {
                     }
 
                     let tmp = "";
-                    for (let i = 0; i <= r; i ++ ) {
+                    for (let i = 0; i <= r; i++) {
                         tmp = tmp + arrs[i];
                         if (i !== r) {
                             tmp = tmp + " | ";
@@ -70,7 +74,7 @@ function init() {
 
                     map1.set(word, response["result"]);
                     map2.set(word, tmp);
-                    cnt ++ ;
+                    cnt++;
                     progressBar.width((cnt / total * 100) + "%");
 
                     if (cnt === total) {
@@ -87,30 +91,37 @@ function init() {
         }
     });
 
+    // 修改下载按钮点击事件，显示模态框
     downloadBtn1.on('click', () => {
-        const blob = new Blob([res1], {
-          type: 'charset=uft-8',
-        });
-        const a = document.createElement('a');
-        const url = window.URL.createObjectURL(blob);
-
-        a.href = url;
-        a.download = `translation.txt`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+        currentDownloadType = 'withBreak';
+        downloadContent = res1;
+        $('#filenameModal').modal('show');
+        $('#downloadFilename').val('translation_with_break');
     });
 
     downloadBtn2.on('click', () => {
-        const blob = new Blob([res2], {
-          type: 'charset=uft-8',
+        currentDownloadType = 'withoutBreak';
+        downloadContent = res2;
+        $('#filenameModal').modal('show');
+        $('#downloadFilename').val('translation_without_break');
+    });
+
+    // 添加模态框确认按钮事件
+    $('#confirmDownload').on('click', function () {
+        const filename = $('#downloadFilename').val() || 'translation_result';
+        const blob = new Blob([downloadContent], {
+            type: 'text/plain;charset=utf-8',
         });
         const a = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
 
         a.href = url;
-        a.download = `translation.txt`;
+        a.download = `${filename}.txt`;
         a.click();
         window.URL.revokeObjectURL(url);
+
+        // 关闭模态框
+        $('#filenameModal').modal('hide');
     });
 }
 
